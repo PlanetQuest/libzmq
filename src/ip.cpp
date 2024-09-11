@@ -563,13 +563,14 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
     // At least: open_socket can fail or later in bind or even in connect after bind
     bool ipc_fallback_on_tcpip = true;
 
+    SOCKET listener;
     if (!zmq::try_ipc_first) {
         // a past ipc attempt failed, skip straight to try_tcpip in the future;
         goto try_tcpip;
     }
 
     //  Create a listening socket.
-    const SOCKET listener = open_socket (AF_UNIX, SOCK_STREAM, 0);
+    listener = open_socket (AF_UNIX, SOCK_STREAM, 0);
     if (listener == retired_fd) {
         //  This may happen if the library was built on a system supporting AF_UNIX, but the system running doesn't support it.
         goto try_tcpip;
